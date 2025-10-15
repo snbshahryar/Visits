@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>فرم ثبت ویزیت پزشک / داروخانه</title>
+
+<link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css" rel="stylesheet">
+
+<style>
+body {
+  font-family: Vazir, Tahoma, sans-serif;
+  background:#f4f6fb;
+  margin:0; padding:20px; direction:rtl;
+}
+.container {
+  max-width:800px; margin:auto; background:#fff;
+  border-radius:10px; padding:20px;
+  box-shadow:0 3px 10px rgba(0,0,0,0.1);
+}
+h2 { text-align:center; font-weight:700; margin-bottom:15px; }
+label { display:block; margin-top:10px; font-weight:500; }
+input, select, textarea, button {
+  width:100%; padding:8px; margin-top:5px;
+  border:1px solid #ccc; border-radius:5px; box-sizing:border-box;
+  font-family:Vazir,sans-serif;
+}
+input[readonly] { background:#f1f1f1; color:#555; cursor:not-allowed; }
+button {
+  background-color:#2563eb; color:white; font-weight:600;
+  cursor:pointer; margin-top:10px; transition:background 0.2s;
+}
+button:hover { background-color:#1d4ed8; }
+button:disabled { background:#ccc; cursor:not-allowed; }
+.row { display:flex; gap:10px; }
+.row input { flex:1; }
+.muted { color:#666; font-size:13px; }
+.warning {
+  background-color:#fff3cd; color:#856404;
+  padding:10px; border-radius:8px; margin-top:10px; display:none;
+}
+
+/* دو ستونه در دسکتاپ */
+.form-grid {
+  display:grid;
+  grid-template-columns: 1fr;
+  gap:15px;
+}
+@media (min-width: 768px) {
+  .form-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+.form-grid > div {
+  display:flex;
+  flex-direction:column;
+}
+textarea {
+  grid-column: span 2;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+<h2>فرم ثبت ویزیت </h2>
+<form id="visitForm">
+
+  <div class="form-grid">
+    <div>
+      <label>نام نماینده علمی:</label>
+      <select id="scientificRep" required>
+        <option value="">انتخاب کنید</option>
+      </select>
+    </div>
+
+    <div>
+      <label>نام مدیر مستقیم:</label>
+      <input type="text" id="directManager" readonly required>
+    </div>
+
+    <div>
+      <label>نام پزشک یا داروخانه:</label>
+      <input type="text" id="doctorName" required>
+    </div>
+
+    <div>
+      <label>کد نظام:</label>
+      <input type="text" id="license" required>
+    </div>
+
+    <div>
+      <label>تخصص:</label>
+      <select id="specialty" required>
+        <option value="">انتخاب کنید</option>
+        <option value="مسئول خرید">مسئول خرید</option>
+        <option value="پ-قلب//ندارد">پ-قلب//ندارد</option>
+        <option value="پ-داخلی//ندارد">پ-داخلی//ندارد</option>
+        <option value="پ-نورولوژی//ندارد">پ-نورولوژی//ندارد</option>
+        <option value="مسئول داروخانه">مسئول داروخانه</option>
+        <option value="پ-قلب//اکوکاردیوگرافی">پ-قلب//اکوکاردیوگرافی</option>
+        <option value="پ-رزیدنت قلب">پ-رزیدنت قلب</option>
+        <option value="پ-قلب//اینترونشن">پ-قلب//اینترونشن</option>
+        <option value="پ-پوست//ندارد">پ-پوست//ندارد</option>
+        <option value="پ-عمومی//(دیابت)">پ-عمومی//(دیابت)</option>
+        <option value="پ-داخلی//(دیابت)">پ-داخلی//(دیابت)</option>
+        <option value="پ-داخلی//نفرولوژی">پ-داخلی//نفرولوژی</option>
+        <option value="موسس داروخانه">موسس داروخانه</option>
+        <option value="پ-قلب//نارسایی">پ-قلب//نارسایی</option>
+        <option value="پ-داخلی//قلب">پ-داخلی//قلب</option>
+        <option value="پ-نورولوژی//نورواینترونشن">پ-نورولوژی//نورواینترونشن</option>
+        <option value="پ-داخلی//غدد">پ-داخلی//غدد</option>
+        <option value="پ-قلب//الکتروفیزیولوژی">پ-قلب//الکتروفیزیولوژی</option>
+        <option value="پ-داخلی//روماتولوژی">پ-داخلی//روماتولوژی</option>
+        <option value="مسئول خرید(مسئول فنی)">مسئول خرید(مسئول فنی)</option>
+        <option value="پ-داخلی//خون و سرطان">پ-داخلی//خون و سرطان</option>
+        <option value="پ-رادیوتراپی//ندارد">پ-رادیوتراپی//ندارد</option>
+        <option value="پ-داخلی//ریه">پ-داخلی//ریه</option>
+        <option value="پ-جراحی عمومی//جراحی قلب">پ-جراحی عمومی//جراحی قلب</option>
+        <option value="پ-ارتوپدی//ندارد">پ-ارتوپدی//ندارد</option>
+        <option value="داروساز (مسئول فنی)">داروساز (مسئول فنی)</option>
+        <option value="پ-جراحی عمومی//جراحی عروق">پ-جراحی عمومی//جراحی عروق</option>
+        <option value="دفتر مرکزی">دفتر مرکزی</option>
+        <option value="پ-رزیدنت ارتوپدی">پ-رزیدنت ارتوپدی</option>
+        <option value="پ-ارتوپدی//زانو">پ-ارتوپدی//زانو</option>
+        <option value="به سمت ماموریت">به سمت ماموریت</option>
+        <option value="فوق برنامه">فوق برنامه</option>
+        <option value="پرستار">پرستار</option>
+        <option value="پ-رزیدنت داخلی">پ-رزیدنت داخلی</option>
+        <option value="پ-قلب//بیماریهای مادرزادی">پ-قلب//بیماریهای مادرزادی</option>
+        <option value="پ-نورولوژی//MS">پ-نورولوژی//MS</option>
+        <option value="وقفه در ویزیت">وقفه در ویزیت</option>
+        <option value="پ-نورولوژی//صرع">پ-نورولوژی//صرع</option>
+        <option value="نسخه پیچ">نسخه پیچ</option>
+        <option value="پ-ارتوپدی//جراحی ستون فقرات">پ-ارتوپدی//جراحی ستون فقرات</option>
+        <option value="پ-قلب//کاردیوانکولوژی">پ-قلب//کاردیوانکولوژی</option>
+        <option value="ناظر دارویی">ناظر دارویی</option>
+        <option value="پ-داخلی//فلو خون و سرطان">پ-داخلی//فلو خون و سرطان</option>
+        <option value="پ-نورولوژی//نوروماسکولار">پ-نورولوژی//نوروماسکولار</option>
+        <option value="نورولوژی/ استروک">نورولوژی/ استروک</option>
+        <option value="پ-ارتوپدی//ارتروسکوپی">پ-ارتوپدی//ارتروسکوپی</option>
+        <option value="پ-رزیدنت نورولوژی">پ-رزیدنت نورولوژی</option>
+        <option value="قلب/ کاردیو انکو">قلب/ کاردیو انکو</option>
+        <option value="پ-اطفال//خون و سرطان اطفال">پ-اطفال//خون و سرطان اطفال</option>
+      </select>
+    </div>
+
+    <div>
+      <label>نوع ویزیت:</label>
+      <select id="visitType" required>
+        <option value="">انتخاب کنید</option>
+        <option value="ویزیت داروخانه">ویزیت داروخانه</option>
+        <option value="ویزیت پزشک">ویزیت پزشک</option>
+        <option value="وقفه ویزیت">وقفه ویزیت</option>
+        <option value="فوق برنامه">فوق برنامه</option>
+        <option value="دابل ویزیت">دابل ویزیت</option>
+        <option value="به سمت ماموریت">به سمت ماموریت</option>
+      </select>
+    </div>
+
+    <div style="grid-column: span 2;">
+      <label>توضیحات:</label>
+      <textarea id="notes" rows="3" placeholder="یادداشت‌ها یا توضیحات اضافی"></textarea>
+    </div>
+  </div>
+
+  <div class="row">
+    <button type="button" id="startVisit">شروع ویزیت</button>
+    <input type="text" id="timeIn" placeholder="زمان ورود" readonly>
+  </div>
+
+  <div class="row">
+    <button type="button" id="endVisit" disabled>پایان ویزیت</button>
+    <input type="text" id="timeOut" placeholder="زمان خروج" readonly>
+  </div>
+
+  <p id="locStatus" class="muted">در حال بررسی موقعیت مکانی...</p>
+  <div id="gpsWarning" class="warning">
+    ⚠️ لطفاً GPS دستگاه خود را روشن کنید تا بتوانید اطلاعات را ثبت کنید.
+  </div>
+
+  <button type="submit" id="submitBtn" disabled>ثبت و ارسال</button>
+</form>
+<p id="status" class="muted"></p>
+</div>
+
+<script>
+// داده‌های مدیران و نیروها
+const managersData = {
+  "تیم حمیدرضا تفتی": ["ایرج جوانمرد","فرامرز حسین زاده","علی جعفری","معین آقایی","امیر سالار کلانتر","فرید رحمتی","حمیدرضا قلی زاده آتانی","میلاد حاجعلی","میثم محمدی","مهدی شاد"],
+  "تیم سعیده محمدی": ["ندا حاتمی","دانیال سلطانی","فاطمه مهدی نیا","نگین آوازه","غزاله آگاهی","وحید خسروپور"],
+  "تیم مهدی خانعلی پور": ["لیلی نصیری","آروین ستایش","مصطفی واضحی فرد","پریسا دادخواه","نسیم حسن پور","شکیبا حسینی","فرانک لطفی","ساناز سربازی"],
+  "فاطمه نویدی": ["منیژه حسن نیا","محمد خیاط زاده","وحیده حقی","فاطمه آقاجانی","محبوبه مسئله گویان","هدی مظلوم زاده","الناز فتحی","سمانه اشترانی"],
+  "تیم هاجر الهیان پور": ["امیر رکنی","بهنام نمازی","مهناز بابایی","علیرضا حسینی","الهام مولوی","نگار شمسایی نژاد","زهرا قره چاهی"],
+  "تیم عیسی ابراهیمی": ["پرستو احمدیان","سولماز عبادی","المیرا تقی زاده"],
+  "تیم وجیهه زند": ["مریم محمودی"],
+  "مازیار حاتمیان": ["افسانه علیپور","مرضیه یوسف زاده","محمدجواد عمادی"],
+  "پریسا خادم حسینی": ["مژده دژجوی"]
+};
+
+// پر کردن کشویی نمایندگان
+const repSelect = document.getElementById('scientificRep');
+for (const [manager, reps] of Object.entries(managersData)) {
+  reps.forEach(rep => {
+    const opt = document.createElement('option');
+    opt.value = rep;
+    opt.textContent = rep;
+    opt.dataset.manager = manager;
+    repSelect.appendChild(opt);
+  });
+}
+
+// وقتی نماینده انتخاب شد → مدیر خودکار پر شود
+repSelect.addEventListener('change', e => {
+  const selectedOption = e.target.selectedOptions[0];
+  document.getElementById('directManager').value = selectedOption.dataset.manager || '';
+});
+
+// موقعیت GPS
+let currentLocation = null;
+const locStatus = document.getElementById('locStatus');
+const gpsWarning = document.getElementById('gpsWarning');
+const submitBtn = document.getElementById('submitBtn');
+
+function getLocation() {
+  if (!navigator.geolocation) {
+    locStatus.textContent = 'مرورگر شما از GPS پشتیبانی نمی‌کند.';
+    gpsWarning.style.display = 'block';
+    submitBtn.disabled = true;
+    return;
+  }
+  navigator.geolocation.getCurrentPosition(
+    pos => {
+      currentLocation = {
+        latitude: pos.coords.latitude.toFixed(6),
+        longitude: pos.coords.longitude.toFixed(6)
+      };
+      locStatus.textContent = '✅ موقعیت با موفقیت دریافت شد.';
+      gpsWarning.style.display = 'none';
+    },
+    err => {
+      locStatus.textContent = '⚠️ لطفاً GPS دستگاه خود را روشن کنید.';
+      gpsWarning.style.display = 'block';
+    },
+    { enableHighAccuracy:true, timeout:10000, maximumAge:0 }
+  );
+}
+
+window.addEventListener('load', getLocation);
+
+// دکمه‌های ویزیت
+const startBtn = document.getElementById('startVisit');
+const endBtn = document.getElementById('endVisit');
+const timeInInput = document.getElementById('timeIn');
+const timeOutInput = document.getElementById('timeOut');
+
+startBtn.addEventListener('click', () => {
+  const now = new Date();
+  timeInInput.value = now.toLocaleTimeString('fa-IR', {hour: '2-digit', minute: '2-digit'});
+  startBtn.disabled = true;
+  endBtn.disabled = false;
+  submitBtn.disabled = true;
+});
+
+endBtn.addEventListener('click', () => {
+  const now = new Date();
+  timeOutInput.value = now.toLocaleTimeString('fa-IR', {hour: '2-digit', minute: '2-digit'});
+  endBtn.disabled = true;
+  submitBtn.disabled = false;
+});
+
+// ارسال فرم
+document.getElementById('visitForm').addEventListener('submit', async e => {
+  e.preventDefault();
+  if (!currentLocation) {
+    alert('⚠️ ابتدا باید موقعیت جغرافیایی دریافت شود.');
+    return;
+  }
+
+  const data = {
+    scientificRep: repSelect.value,
+    directManager: document.getElementById('directManager').value,
+    doctorName: document.getElementById('doctorName').value,
+    license: document.getElementById('license').value,
+    specialty: document.getElementById('specialty').value,
+    visitType: document.getElementById('visitType').value,
+    notes: document.getElementById('notes').value,
+    latitude: currentLocation.latitude,
+    longitude: currentLocation.longitude,
+    timeIn: timeInInput.value,
+    timeOut: timeOutInput.value
+  };
+
+  try {
+    const res = await fetch('https://script.google.com/macros/s/AKfycbyoCdMJrr9F-whd0PNdW7mXo3-0p2iQr15m2-KyKm3YIHmN7Nl5d3zZEi18SCKNjh48Mw/exec', {
+      method:'POST',
+      headers:{ 'Content-Type':'application/json' },
+      body: JSON.stringify(data)
+    });
+    if (!res.ok) throw new Error('خطا در ارسال داده');
+    const result = await res.json();
+    document.getElementById('status').textContent = `✅ ویزیت ثبت شد. زمان سرور: ${result.serverTimestamp}`;
+    e.target.reset();
+    timeInInput.value = '';
+    timeOutInput.value = '';
+    startBtn.disabled = false;
+    endBtn.disabled = true;
+    submitBtn.disabled = true;
+    getLocation();
+  } catch(err) {
+    document.getElementById('status').textContent = '❌ خطا در ارسال فرم: '+err.message;
+  }
+});
+</script>
+</body>
+</html>
