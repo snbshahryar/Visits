@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>فرم ثبت ویزیت پزشک / داروخانه</title>
+<link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css" rel="stylesheet">
+<style>
+body{font-family:Vazir;background:#f4f6fb;margin:0;padding:20px;}
+.container{max-width:800px;margin:auto;background:#fff;border-radius:10px;padding:20px;box-shadow:0 3px 10px rgba(0,0,0,0.1);}
+h2{text-align:center;font-weight:700;margin-bottom:20px;}
+label{display:block;margin-top:10px;}
+input,select,textarea,button{width:100%;padding:10px;margin-top:5px;border:1px solid #ccc;border-radius:8px;font-family:Vazir;}
+button{background-color:#2563eb;color:white;font-weight:600;cursor:pointer;margin-top:10px;border:none;border-radius:10px;padding:12px;}
+button:hover{background-color:#1d4ed8;}
+.row{display:flex;gap:10px;margin-top:15px;}
+.row button{flex:1;}
+.muted{text-align:center;color:#666;margin-top:10px;}
+.warning{background:#fff3cd;color:#856404;padding:10px;border-radius:8px;margin-top:10px;display:none;}
+.form-grid{display:grid;grid-template-columns:1fr;gap:15px;}
+@media(min-width:768px){.form-grid{grid-template-columns:1fr 1fr;}}
+textarea{grid-column:span 2;}
+</style>
+</head>
+<body>
+
+<div class="container">
+<h2>فرم ثبت ویزیت</h2>
+<form id="visitForm">
+  <div class="form-grid">
+    <div>
+      <label>نام نماینده علمی:</label>
+      <select id="scientificRep" required>
+        <option value="">انتخاب کنید</option>
+      </select>
+    </div>
+    <div>
+      <label>نام مدیر مستقیم:</label>
+      <input type="text" id="directManager" readonly required>
+    </div>
+    <div>
+      <label>نام مخاطب:</label>
+      <input type="text" id="doctorName" required>
+    </div>
+    <div>
+      <label>کد نظام:</label>
+      <input type="text" id="license" required>
+    </div>
+    <div>
+      <label>تخصص:</label>
+      <select id="specialty" required>
+        <option value="">انتخاب کنید</option>
+        <option value="مسئول خرید">مسئول خرید</option>
+        <option value="پ-قلب">پ-قلب</option>
+        <option value="پ-داخلی">پ-داخلی</option>
+        <option value="پ-نورولوژی">پ-نورولوژی</option>
+        <option value="پ-پوست">پ-پوست</option>
+        <option value="داروساز">داروساز</option>
+      </select>
+    </div>
+    <div>
+      <label>نوع ویزیت:</label>
+      <select id="visitType" required>
+        <option value="">انتخاب کنید</option>
+        <option value="ویزیت پزشک">ویزیت پزشک</option>
+        <option value="ویزیت داروخانه">ویزیت داروخانه</option>
+        <option value="وقفه ویزیت">وقفه ویزیت</option>
+        <option value="فوق برنامه">فوق برنامه</option>
+      </select>
+    </div>
+    <div style="grid-column: span 2;">
+      <label>توضیحات:</label>
+      <textarea id="notes" rows="3"></textarea>
+    </div>
+  </div>
+
+  <div class="row">
+    <button type="button" id="startVisit">شروع ویزیت</button>
+    <button type="button" id="endVisit" disabled>پایان ویزیت</button>
+  </div>
+
+  <p id="locStatus" class="muted">در حال بررسی موقعیت مکانی...</p>
+  <div id="gpsWarning" class="warning">⚠️ لطفاً GPS دستگاه خود را روشن کنید.</div>
+
+  <button type="submit" id="submitBtn" disabled>ثبت و ارسال</button>
+</form>
+<p id="status" class="muted"></p>
+</div>
+
+<script>
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzWc_b1B_u-hyx8vXIxvSo4DO7DeCZqyLWn4_SlbiQm7Csc42nmEySyniu5IOwey-K2gg/exec"; // 🔸 لینک وب اپ خودت
+
+const managersData = {
+  "تیم حمیدرضا تفتی": ["ایرج جوانمرد","فرامرز حسین زاده","علی جعفری"],
+  "تیم سعیده محمدی": ["ندا حاتمی","فاطمه مهدی نیا"],
+  "تیم مهدی خانعلی پور": ["لیلی نصیری","آروین ستایش"]
+};
+
+// پر کردن لیست نماینده‌ها
+const repSelect = document.getElementById('scientificRep');
+for (const [manager, reps] of Object.entries(managersData)) {
+  reps.forEach(rep => {
+    const opt = document.createElement('option');
+    opt.value = rep;
+    opt.textContent = rep;
+    opt.dataset.manager = manager;
+    repSelect.appendChild(opt);
+  });
+}
+repSelect.addEventListener('change', e => {
+  document.getElementById('directManager').value = e.target.selectedOptions[0].dataset.manager || '';
+});
+
+// GPS
+let currentLocation = null;
+function getLocation() {
+  if (!navigator.geolocation) return;
+  navigator.geolocation.getCurrentPosition(
+    pos => {
+      currentLocation = {
+        latitude: pos.coords.latitude.toFixed(6),
+        longitude: pos.coords.longitude.toFixed(6)
+      };
+      document.getElementById('locStatus').textContent = "✅ موقعیت دریافت شد.";
+    },
+    err => {
+      document.getElementById('locStatus').textContent = "⚠️ لطفاً GPS را فعال کنید.";
+    }
+  );
+}
+window.addEventListener('load', getLocation);
+
+// دکمه‌ها
+let timeIn = null, timeOut = null;
+const startBtn = document.getElementById('startVisit');
+const endBtn = document.getElementById('endVisit');
+const submitBtn = document.getElementById('submitBtn');
+
+startBtn.addEventListener('click',()=>{
+  timeIn = new Date().toLocaleTimeString('fa-IR',{hour:'2-digit',minute:'2-digit'});
+  startBtn.disabled = true;
+  endBtn.disabled = false;
+});
+endBtn.addEventListener('click',()=>{
+  timeOut = new Date().toLocaleTimeString('fa-IR',{hour:'2-digit',minute:'2-digit'});
+  endBtn.disabled = true;
+  submitBtn.disabled = false;
+});
+
+// ارسال داده
+document.getElementById('visitForm').addEventListener('submit', async e=>{
+  e.preventDefault();
+  const data = {
+    scientificRep: repSelect.value,
+    directManager: document.getElementById('directManager').value,
+    doctorName: document.getElementById('doctorName').value,
+    license: document.getElementById('license').value,
+    specialty: document.getElementById('specialty').value,
+    visitType: document.getElementById('visitType').value,
+    notes: document.getElementById('notes').value,
+    latitude: currentLocation?.latitude || '',
+    longitude: currentLocation?.longitude || '',
+    timeIn, timeOut
+  };
+  try {
+    const res = await fetch(SCRIPT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    const result = await res.json();
+    document.getElementById('status').textContent = "✅ ثبت شد: " + result.serverTimestamp;
+    e.target.reset();
+    startBtn.disabled = false;
+    endBtn.disabled = true;
+    submitBtn.disabled = true;
+  } catch(err) {
+    document.getElementById('status').textContent = "❌ خطا در ارسال: " + err.message;
+  }
+});
+</script>
+</body>
+</html>
